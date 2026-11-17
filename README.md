@@ -1,73 +1,84 @@
-# 🦊 Tweet FoxDownloader
+# 🦊 FoxDownloader
 
-**Tweet FoxDownloader** é uma ferramenta em Python e Executável (.exe) poderosa, ultra-rápida e extremamente segura desenvolvida para fazer backup automático de **todas as imagens (na resolução máxima original 4K)** e **vídeos/GIFs** da sua conta do Twitter/X ou de qualquer perfil público.
+Ferramenta em Python e executável (.exe) para fazer backup de **imagens (resolução máxima)**, **vídeos** e **GIFs** de múltiplas plataformas — tudo autenticado **sem usuário e senha**, apenas via cookies/tokens de sessão.
 
-Para garantir a **segurança total da sua conta**, a ferramenta opera **estritamente via cookies de sessão (`cookies.json`)**. Isso significa que você **nunca** precisará fornecer seu usuário, e-mail ou senha!
+## Plataformas suportadas
 
----
-
-## 🚀 Como Usar o Executável Direto (Método Mais Fácil)
-
-Criamos uma versão executável independente para você rodar em qualquer computador sem precisar ter o Python ou qualquer biblioteca instalada!
-
-1.  Vá para a pasta **`dist`** no diretório do projeto.
-2.  Lá você encontrará o arquivo **`downloader.exe`**.
-3.  Coloque o seu arquivo **`cookies.json`** na **mesma pasta** que o `downloader.exe`.
-4.  Dê dois cliques no **`downloader.exe`** para iniciar o programa com o menu interativo!
+| Plataforma  | Curtidas/Salvos | Postagens próprias | Outros perfis |
+|-------------|-----------------|--------------------|---------------|
+| Twitter / X | ✅ Likes        | ✅ Tweets, Mídias, Bookmarks, Highlights | ✅ Perfil público |
+| Pixiv       | ✅ Bookmarks    | ✅ Illusts (illust + manga) | — |
+| Pinterest   | ✅ Salvos (boards) | ✅ Pins criados | — |
 
 ---
 
-## ✨ O que é possível baixar?
+## 🚀 Como usar o executável (.exe)
 
-Com o **Tweet FoxDownloader**, você pode selecionar exatamente qual tipo de mídia deseja exportar através de um menu interativo no terminal:
+1. Coloque os arquivos de autenticação na mesma pasta do `downloader.exe` (veja abaixo).
+2. Dê dois cliques no `downloader.exe`.
+3. Escolha a plataforma e a ação desejada.
 
-1. 💖 **Mídias Curtidas (Likes)**: Faz o backup de todas as fotos e vídeos curtidos por você.
-2. 📝 **Seus Tweets e Retweets**: Salva as mídias postadas diretamente no seu feed pessoal.
-3. 📸 **Suas Mídias Postadas**: Filtro focado exclusivamente nas mídias que você enviou ao Twitter.
-4. 🔖 **Tweets Salvos (Bookmarks)**: Faz o backup de todos os seus itens marcados como salvos na plataforma.
-5. 🌟 **Destaques (Highlights)**: Baixa as mídias das postagens que você destacou no seu perfil.
-6. 🔍 **Mídias de Outro Perfil Público**: Permite digitar o `@` de qualquer conta pública e baixar:
-   - Posts e Retweets
-   - Apenas mídias postadas
-   - Curtidas (caso os likes daquela conta sejam públicos)
+## 🐍 Como rodar via Python
 
----
+```bash
+pip install -r requirements.txt
+python downloader.py
+```
 
-## 🛠️ Como Gerar o `cookies.json` (Em 1 Minuto)
-
-Como o script funciona exclusivamente via cookies (garantindo que você não precise digitar login ou senha), basta exportá-los do seu navegador:
-
-1.  Abra o navegador e faça login na sua conta do **Twitter/X** normalmente.
-2.  Instale uma extensão segura de exportação de cookies, como a **[EditThisCookie](https://chromewebstore.google.com/detail/editthiscookie-v3/ojfebgpkimhlhcblbalbfjblapadhbol)**.
-3.  Com a página do Twitter/X aberta, clique no ícone da extensão no topo direito do navegador e clique no botão **Exportar** (ícone de seta saindo `📤`). Isso copiará os cookies em formato JSON para a sua área de transferência (Ctrl+C).
-4.  Crie um arquivo chamado **`cookies.json`** na mesma pasta do executável (ou do script), abra-o, cole o conteúdo copiado (Ctrl+V) e salve.
+> Requer Python 3.10+ (por causa do `pinterest-dl`).
 
 ---
 
-## 🐍 Executando Via Código Python (Opcional)
+## 🔑 Autenticação por plataforma
 
-Se preferir rodar diretamente como desenvolvedor via código-fonte Python:
+Nenhuma plataforma pede senha. Você só precisa destes arquivos:
 
-1.  Instale as dependências essenciais:
-    ```bash
-    pip install -r requirements.txt
-    ```
-2.  Execute o script:
-    ```bash
-    python downloader.py
-    ```
+| Plataforma  | Arquivo           | Como obter |
+|-------------|-------------------|------------|
+| Twitter / X | `cookies.json`    | Exporte os cookies do navegador logado no X (ex.: extensão EditThisCookie). |
+| Pixiv       | `pixiv_cookies.json` | Exporte os cookies do navegador logado no Pixiv (precisa conter o `PHPSESSID`). |
+| Pinterest   | `pinterest_cookies.json` | `pinterest-dl login --from-browser -o pinterest_cookies.json` (ou exporte os cookies do navegador logado no Pinterest). Preencha também `"username"` em `config.json`. |
+
+O arquivo `config.json` é criado automaticamente na primeira execução e permite trocar o caminho dos arquivos de cookies.
 
 ---
 
-## 📂 Estrutura Organizada de Pastas
+## 📁 Estrutura de pastas
 
-Para manter tudo arrumado, os downloads de mídias são salvos em subpastas organizadas de acordo com a ação escolhida dentro do diretório `liked_media/`:
+Os downloads são organizados em:
 
-*   `liked_media/likes/`: Mídias curtidas por você.
-*   `liked_media/my_tweets/`: Mídias do seu próprio feed.
-*   `liked_media/my_media/`: Apenas suas mídias enviadas.
-*   `liked_media/bookmarks/`: Mídias das suas postagens salvas.
-*   `liked_media/highlights/`: Mídias das postagens em destaque.
-*   `liked_media/user_[username]_[tipo]/`: Mídias obtidas de outros perfis pesquisados.
+```
+downloads/
+├── twitter/
+│   ├── likes/images|videos/
+│   ├── my_tweets/images|videos/
+│   ├── my_media/images|videos/
+│   ├── bookmarks/images|videos/
+│   ├── highlights/images|videos/
+│   └── user_profile_*/images|videos/
+├── pixiv/
+│   ├── bookmarks/images/  (e videos/ para UGOIRA → GIF)
+│   └── own_illusts/images/
+└── pinterest/
+    ├── saved/images|videos/
+    └── created/images|videos/
+```
 
-Os arquivos de mídia são ordenados e nomeados com a data do tweet no começo (`ANO-MES-DIA_tweet_[ID]_[INDEX].jpg/mp4`) para facilitar a navegação cronológica no seu computador!
+Os arquivos são nomeados como `{data}_{plataforma}_{id}_{índice}.ext` (a data aparece quando disponível).
+
+---
+
+## ⚙️ Observações e limitações
+
+- **Pinterest** usa a API interna (`/resource/...`) com seus cookies. Como o Pinterest muda esses endpoints com frequência, pode ser necessário ajustar o adapter caso ele deixe de responder.
+- **Pinterest — vídeos**: para converter vídeos para MP4 é recomendado ter o `ffmpeg` instalado no sistema. Sem ele, o download cai para a imagem (pôster) do pin.
+- **Pixiv**: autentica pelo `PHPSESSID` dos cookies, usando a API web interna (`/ajax/...`). O ID do usuário é lido do próprio cookie — não é preciso gerar token.
+- **Pixiv — UGOIRA**: obras animadas são convertidas para GIF (requer Pillow, já nas dependências).
+- **Histórico**: o arquivo `download_history.json` evita baixar de novo o que já foi concluído. O formato antigo (lista de tweets) é migrado automaticamente.
+- **Estatísticas**: ao autenticar, o programa exibe um resumo da conta (curtidas, posts, mídias etc.) e, ao final de cada download, mostra quantidades por tipo, tamanho total, tempo e eventuais falhas agrupadas por motivo.
+
+---
+
+## ⚠️ Segurança da conta
+
+Guarde os arquivos `cookies.json`, `pixiv_cookies.json`, `pinterest_cookies.json` e `config.json` como segredos. Eles dão acesso à sua sessão. Não os compartilhe nem os comite no Git (o `.gitignore` já os ignora).

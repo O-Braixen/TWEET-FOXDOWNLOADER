@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+build/
+dist/
+downloads/
+config.json
+*cookies*.json
+download_history.json
